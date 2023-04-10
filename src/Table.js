@@ -2,10 +2,9 @@ import React from 'react'
 
 function TableHeader()  {
   return (
-  //<thead> </thead> : It defines set of row defining a head of column in the table 
     <thead>
-      <tr> //<tr> </tr> : It defines a row of cell in the table
-        <th>Name</th> //<th> </th> defines a cell as a header
+      <tr> 
+        <th>Name</th> 
         <th>Job</th>
       </tr>
     </thead>
@@ -18,6 +17,9 @@ function TableBody(props) {
       <tr key={index}>
         <td>{row.name}</td>         
         <td>{row.job}</td>
+        <td>
+            <button onClick={() => props.removeCharacter(index)} > Delete</button>
+        </td>
       </tr>
     );
    }
@@ -33,7 +35,7 @@ function Table(props) {
     return (
       <table>
         <TableHeader />
-        <TableBody characterData={props.characterData} />
+        <TableBody characterData={props.characterData} removeCharacter= {props.removeCharacter} />
       </table>
     );
 } 
