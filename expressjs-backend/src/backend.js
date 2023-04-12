@@ -44,9 +44,42 @@ app.get('/' , (req, res) => {
 	res.send('Hello World Sucker !');	
 });
 
-app.get('/users', (req, res) => {
-	res.send(users);
+app.get('/error' , (req,res) => {
+	res.send("How did you get here? ");
 		});
+
+app.get('/users', (req, res) => {
+	 const name = req.query.name;
+	 if(name != undefined){
+		 let result = findUserByName(name);
+		 result = {users_list: result};
+		 res.send(result);
+	 }
+	 else {
+		res.send(users);
+	 }
+});
+
+app.get('/users/:id', (req,res) => {
+
+	const id = req.params['id'];
+	let result = findUserById(id);
+	if (result === undefined || result.length == 0)
+		res.status(404).send('Resouce not found');
+	else{
+		result = {users_list: result};
+		res.send(result);
+	}
+
+});
+
+function findUserById(id) {
+	return users['users_list'].find((user) => user['id'] === id);
+}
+
+const findUserByName = (name) => {
+	return users['users_list'].filter((user) => user['name'] === name);
+}
 
 app.listen(port, ()=> {
 	console.log('Example app listening at http://localhost:${port}');

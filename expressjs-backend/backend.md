@@ -49,3 +49,9 @@ const findUserByName = (name) => {
 	return users['users_list'].filter((user) => user['name'] === name);
 }
 ```
+
+
+### 4. Getting Users by ID
+	- When you define API-route, you should avoid action-names.
+	- What does`/users/:id` do? 
+		`:` marks a variable that is part of the URL.
