@@ -85,4 +85,12 @@ app.listen(port, ()=> {
 	console.log('Example app listening at http://localhost:${port}');
 });
 
+app.post('/users', (req , res) => {
+	const userToAdd = req.body;
+	addUser(userToAdd);
+	res.status(200).end();
+});
+ function addUser(user) {
+	 users['users_list'].push(user);
+ }
 
