@@ -1,5 +1,7 @@
+const mylib  = require('./mylib.js');
 const express = require('express');
 const app = express();
+const cors = require('cors');
 
 //Setting port number
 const port = 8000;
@@ -37,6 +39,7 @@ const users = {
 
 //We set up our express app to process 
 //incoming data in JSON format.
+app.use(cors());
 app.use(express.json());
 
 //Setup API endpoint with the app.get function
@@ -87,10 +90,53 @@ app.listen(port, ()=> {
 
 app.post('/users', (req , res) => {
 	const userToAdd = req.body;
+	idgen = get_userid();
+	while(!is_uniqid(users.users_list, idgen)){
+		idgen = get_userid();
+	}
+	userToAdd.id = idgen;
 	addUser(userToAdd);
-	res.status(200).end();
+	res.status(201).end();
 });
  function addUser(user) {
 	 users['users_list'].push(user);
  }
 
+
+
+function get_userid(){
+	a = gen3alpha();
+	b = gen3digits();
+	return a+b;
+}
+
+function is_uniqid(i,j){
+	for(val of i){
+		if(val.id === j){
+			return false;
+		}
+	}
+	return true;
+}
+
+function gen3alpha(){
+	min = 97;
+	max = 122;
+	str = "";
+	for(let i = 0; i<3; i++){
+		j = Math.floor(Math.random() * (max-min) + min);
+		str+=(String.fromCharCode(j));
+	}
+	return str;
+}
+
+function gen3digits(){
+	min = 48;
+	max = 57;
+	str = "";
+	for(let i = 0; i<3; i++){
+		j = Math.floor(Math.random() * (max-min) + min);
+		str+=(String.fromCharCode(j));
+	}
+	return str;
+}
