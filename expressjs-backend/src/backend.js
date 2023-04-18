@@ -44,12 +44,20 @@ app.use(express.json());
 
 //Setup API endpoint with the app.get function
 app.get('/' , (req, res) => {
-	res.send('Hello World Sucker !');	
+	res.send('Hello World!');	
 });
 
-app.get('/error' , (req,res) => {
-	res.send("How did you get here? ");
-		});
+//app.get('/users', (req, res) => {
+//    const id = req.query.id;
+//    if (id != undefined){
+//        let result = findUserById(id);
+//        result = {users_list: result};
+//        res.send(result);
+//    }
+//    else{
+//        res.send(users);
+//    }
+//});
 
 app.get('/users', (req, res) => {
 	 const name = req.query.name;
@@ -63,10 +71,11 @@ app.get('/users', (req, res) => {
 	 }
 });
 
-app.get('/users/:id', (req,res) => {
 
+app.get('/users/:id', (req,res) => {
 	const id = req.params['id'];
 	let result = findUserById(id);
+	console.log(result)
 	if (result === undefined || result.length == 0)
 		res.status(404).send('Resouce not found');
 	else{
@@ -75,6 +84,8 @@ app.get('/users/:id', (req,res) => {
 	}
 
 });
+
+
 
 function findUserById(id) {
 	return users['users_list'].find((user) => user['id'] === id);
@@ -89,6 +100,8 @@ app.listen(port, ()=> {
 });
 
 app.post('/users', (req , res) => {
+	console.log(req.body)
+	console.log("in the app.post")
 	const userToAdd = req.body;
 	idgen = get_userid();
 	while(!is_uniqid(users.users_list, idgen)){
@@ -96,8 +109,39 @@ app.post('/users', (req , res) => {
 	}
 	userToAdd.id = idgen;
 	addUser(userToAdd);
-	res.status(201).end();
+	console.log(userToAdd);
+	res.status(201).send(userToAdd);
 });
+
+app.delete('/users/:id' , (req, res) => {
+	console.log(req.body);
+	console.log(req.data);
+	console.log("userToDelete")
+	const userToDelete  = req.body; 
+	console.log(userToDelete)
+	ind = getind_del(userToDelete.id)
+	if (ind != -1){
+		deleted = users["users_list"].splice(ind, 1);
+		console.log("Sucessfully deleted");
+		res.status(204);
+	}
+});
+
+
+
+function getind_del(target){
+	obj = users['users_list'];
+	for(i =0; i< obj.length; i++){
+		if(obj[i].id == target){
+			console.log("found,%s", i);
+			return i;
+		}
+		
+	}	
+	return -1;
+}
+
+
  function addUser(user) {
 	 users['users_list'].push(user);
  }
