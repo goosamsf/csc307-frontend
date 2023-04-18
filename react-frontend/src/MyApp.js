@@ -19,10 +19,6 @@ function removeOneCharacter (index) {
 	});
 }
 
-function updateList(person){
-    setCharacters([...characters, person]);
-}
-
 async function fetchAll(){
 	try {
 		const response = await axios.get(`http://localhost:8000/users`);

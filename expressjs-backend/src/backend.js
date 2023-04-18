@@ -114,16 +114,13 @@ app.post('/users', (req , res) => {
 });
 
 app.delete('/users/:id' , (req, res) => {
-	console.log(req.body);
-	console.log(req.data);
-	console.log("userToDelete")
-	const userToDelete  = req.body; 
-	console.log(userToDelete)
-	ind = getind_del(userToDelete.id)
+	console.log(req.params.id);
+	const userToDelete  = req.params.id; 
+	ind = getind_del(userToDelete)
 	if (ind != -1){
 		deleted = users["users_list"].splice(ind, 1);
 		console.log("Sucessfully deleted");
-		res.status(204);
+		res.status(204).send();
 	}
 });
 
