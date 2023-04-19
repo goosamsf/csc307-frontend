@@ -1,0 +1,41 @@
+ git init
+ git add ./react-frontend
+ git rm --cached react-frontend
+ git rm --cached -f react-frontend
+ git st
+ git add ./react-frontend
+ git st
+ git commit -m "First Commit"
+ git push -u origin main
+ git branch
+ git branch --set-upstream-to=origin/main main
+ git remote add origin https://github.com/goosamsf/csc307-frontend.git
+ git push -u origin main
+ git pull --allow-unrelated-histories
+ git branch --set-upstream-to=origin/main main
+ git pull --allow-unrelated-histories
+ git config pull.rebase false
+ git pull --allow-unrelated-histories
+ git push -u origin main
+ rm -rf .git
+ git rm --cached -f react-frontend
+ git commit -m "First fix"
+ git push -u origin main
+ git pull --allow-unrelated-histories
+ git commit -m "First fix2"
+ git add ./react-frontend
+ git commit -m "First fix3"
+ git push -u origin main
+ git checkout -b backend
+ git branch
+ git add ./expressjs-backend
+ git st
+ vim .gitignore
+ git add .gitignore
+ git rm -rf node_module
+ git rm -rf node_modules
+ git st
+ git push -u origin backend
+ echo git rm -rf node_modules | pbcopy
+ history | grep git
+ history -100 | grep git
