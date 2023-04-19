@@ -3,14 +3,6 @@ import MyApp from './MyApp'
 import "./index.css";
 import ReactDOMClient from 'react-dom/client'
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-
-=======
->>>>>>> linking
-=======
->>>>>>> linking
 const container = document.getElementById("root");
 
 // Create a root
