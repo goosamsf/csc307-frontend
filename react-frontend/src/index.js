@@ -1,5 +1,10 @@
+import React from 'react'
 import MyApp from './MyApp'
 import "./index.css";
+import ReactDOMClient from 'react-dom/client'
+
+
+
 const container = document.getElementById("root");
 
 // Create a root
