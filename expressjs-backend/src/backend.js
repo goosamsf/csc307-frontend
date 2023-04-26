@@ -2,90 +2,51 @@ const mylib  = require('./mylib.js');
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const userServices = require('./user-services');
 
+const userModel = require('./user');
 //Setting port number
 const port = 8000;
-
-const users = { 
-   users_list :
-   [
-      //{ 
-      //   id : 'xyz789',
-      //   name : 'Charlie',
-      //   job: 'Janitor',
-      //},
-      //{
-      //   id : 'abc123', 
-      //   name: 'Mac',
-      //   job: 'Bouncer',
-      //},
-      //{
-      //   id : 'ppp222', 
-      //   name: 'Mac',
-      //   job: 'Professor',
-      //}, 
-      //{
-      //   id: 'yat999', 
-      //   name: 'Dee',
-      //   job: 'Aspring actress',
-      //},
-      //{
-      //   id: 'zap555', 
-      //   name: 'Dennis',
-      //   job: 'Bartender',
-      //}
-   ]
-}
 
 //We set up our express app to process 
 //incoming data in JSON format.
 app.use(cors());
 app.use(express.json());
 
+const users = { 
+   users_list :
+   []
+}
+
+
 //Setup API endpoint with the app.get function
 app.get('/' , (req, res) => {
 	res.send('Hello World!');	
 });
 
-//app.get('/users', (req, res) => {
-//    const id = req.query.id;
-//    if (id != undefined){
-//        let result = findUserById(id);
-//        result = {users_list: result};
-//        res.send(result);
-//    }
-//    else{
-//        res.send(users);
-//    }
-//});
-
-app.get('/users', (req, res) => {
-	 const name = req.query.name;
-	 if(name != undefined){
-		 let result = findUserByName(name);
-		 result = {users_list: result};
-		 res.send(result);
-	 }
-	 else {
-		res.send(users);
-	 }
+app.get('/users', async (req, res) => {
+	const name = req.query['name'];
+	const job = req.query['job'];
+	try {
+		const result = await userServices.getUsers(name, job);
+		res.send({users_list: result});
+	} catch (error){
+		console.log(error);
+		res.status(500).send('An error ocurred in the server');
+	}
 });
 
 
-app.get('/users/:id', (req,res) => {
-	const id = req.params['id'];
-	let result = findUserById(id);
-	console.log(result)
-	if (result === undefined || result.length == 0)
+app.get('/users/:id', async (req,res) => {
+	const id = req.params['_id'];
+	const result = await userServices.findUserById(id);
+	
+	if (result === undefined || result === null)
 		res.status(404).send('Resouce not found');
 	else{
-		result = {users_list: result};
-		res.send(result);
+		res.send({users_list: result});
 	}
-
 });
-
-
 
 function findUserById(id) {
 	return users['users_list'].find((user) => user['id'] === id);
@@ -99,18 +60,11 @@ app.listen(port, ()=> {
 	console.log('Example app listening at http://localhost:${port}');
 });
 
-app.post('/users', (req , res) => {
-	console.log(req.body)
-	console.log("in the app.post")
-	const userToAdd = req.body;
-	idgen = get_userid();
-	while(!is_uniqid(users.users_list, idgen)){
-		idgen = get_userid();
-	}
-	userToAdd.id = idgen;
-	addUser(userToAdd);
-	console.log(userToAdd);
-	res.status(201).send(userToAdd);
+app.post('/users', async (req, res) => {
+  const user = req.body;
+  const savedUser = await userServices.addUser(user);
+  if (savedUser) res.status(201).send(savedUser);
+  else res.status(500).end();
 });
 
 app.delete('/users/:id' , (req, res) => {
@@ -139,10 +93,16 @@ function getind_del(target){
 }
 
 
- function addUser(user) {
-	 users['users_list'].push(user);
- }
-
+async function addUser(user) {
+  try {
+    const userToAdd = new userModel(user);
+    const savedUser = await userToAdd.save();
+    return savedUser;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
 
 
 function get_userid(){
@@ -181,3 +141,4 @@ function gen3digits(){
 	}
 	return str;
 }
+	
